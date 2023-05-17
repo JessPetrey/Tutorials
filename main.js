@@ -14,5 +14,15 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
     createWindow();
-})
+    //open a window if none are open (MacOS only, Windows and Linux will always have at least one window open by default)
+    app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    });
+});
+
+//quit the app when all windows are closed (Windows and Linux)
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') app.quit();
+});
+
 
