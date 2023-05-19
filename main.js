@@ -4,6 +4,7 @@ method is used to ensure that the window is created when the Electron applicatio
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
+ipcMain.handle('ping', () => 'pong');
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 800,
@@ -12,7 +13,6 @@ const createWindow = () => {
             preload: path.join(__dirname, 'preload.js')
         },
     });
-    ipcMain.handle('ping', () => 'pong');
     win.loadFile('index.html');
 }
 
@@ -20,7 +20,9 @@ app.whenReady().then(() => {
     createWindow();
     //open a window if none are open (MacOS only, Windows and Linux will always have at least one window open by default)
     app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow();
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createWindow();
+        }
     });
 });
 
